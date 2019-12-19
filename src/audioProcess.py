@@ -6,15 +6,16 @@ import matplotlib.pyplot as plt
 from scipy.io import wavfile
 from scipy import interpolate
 
-song_title='diamond_heart'
+# song_title = 'diamond_heart'
+song_title = 'billie'
 stereo = True
 
 mp3 = pydub.AudioSegment.from_mp3('../music/' + song_title + '.mp3')
 ###
-#convert to wav
+# convert to wav
 ###
 mp3.export('../music/wav/' + song_title + '.wav', format="wav")
-rate,audData=scipy.io.wavfile.read('../music/wav/' + song_title + '.wav')
+rate, audData = scipy.io.wavfile.read('../music/wav/' + song_title + '.wav')
 
 print(rate)
 print(audData)
@@ -31,15 +32,15 @@ interpolator = interpolate.interp1d(time_old, audData.T)
 new_audio = interpolator(time_new).T
 
 wavfile.write("../music/wav/out.wav", SAMPLERATE, np.round(new_audio).astype(audData.dtype))
-rate,audData=scipy.io.wavfile.read('../music/wav/' + 'out' + '.wav')
+rate, audData = scipy.io.wavfile.read('../music/wav/' + 'out' + '.wav')
 
 print(rate)
 #####
 # if stereo, take only one channel
 #####
 if stereo:
-    channel1=audData[:,0] #left
-    channel2=audData[:,1] #right
+    channel1 = audData[:, 0]  # left
+    channel2 = audData[:, 1]  # right
 else:
     channel1 = audData
 
@@ -52,23 +53,25 @@ absolute_music = np.vectorize(abs)
 music = absolute_music(music)
 print(music.shape)
 
+
 def normalize(x):
-   if x < 200:
-       return 1
-   elif x < 1000:
-       return 2
-   elif x < 5000:
-       return 3
-   elif x < 6000:
-       return 4
-   elif x < 8000:
-       return 5
-   elif x < 10000:
-       return 6
-   elif x < 15000:
-       return 7
-   else:
-       return 8
+    if x < 200:
+        return 1
+    elif x < 1000:
+        return 2
+    elif x < 5000:
+        return 3
+    elif x < 6000:
+        return 4
+    elif x < 8000:
+        return 5
+    elif x < 10000:
+        return 6
+    elif x < 15000:
+        return 7
+    else:
+        return 8
+
 
 normalize_music = np.vectorize(normalize)
 music = normalize_music(music)
