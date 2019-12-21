@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.io import wavfile
 from scipy import interpolate
 
-song_title='diamond_heart'
+song_title='billie2'
 stereo = True
 
 mp3 = pydub.AudioSegment.from_mp3('../music/' + song_title + '.mp3')
@@ -59,16 +59,18 @@ def normalize(x):
        return 2
    elif x < 5000:
        return 3
-   elif x < 6000:
+   elif x < 5500:
        return 4
-   elif x < 8000:
+   elif x < 6000:
        return 5
-   elif x < 10000:
+   elif x < 8000:
        return 6
-   elif x < 15000:
+   elif x < 10000:
        return 7
-   else:
+   elif x < 15000:
        return 8
+   else:
+       return 9
 
 normalize_music = np.vectorize(normalize)
 music = normalize_music(music)

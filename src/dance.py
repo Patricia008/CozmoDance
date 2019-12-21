@@ -5,11 +5,13 @@ import numpy as np
 import time as Time
 import math
 
+from pygame import mixer
+
 ###
 # should be the same as in audioProcess.py file
 ###
 SAMPLERATE = 380
-song_title = 'billie'
+song_title = 'billie2'
 music=[]
 
 def read_music_data():
@@ -24,22 +26,18 @@ def to_the_left_to_the_right(robot: cozmo.robot.Robot):
     to_the_right(robot)
 
 def up_n_down(robot):
-    action1 = robot.set_head_angle(cozmo.robot.MAX_HEAD_ANGLE, in_parallel=True)
-    action2 = robot.set_lift_height(1.0, in_parallel=True)
-    action1.wait_for_completed()
-    action2.wait_for_completed()
-    action1 = robot.set_head_angle(cozmo.robot.MIN_HEAD_ANGLE, in_parallel=True)
-    action2 = robot.set_lift_height(0.0, in_parallel=True)
-    action1.wait_for_completed()
-    action2.wait_for_completed()
-    action1 = robot.set_head_angle(cozmo.robot.MAX_HEAD_ANGLE, in_parallel=True)
-    action2 = robot.set_lift_height(1.0, in_parallel=True)
-    action1.wait_for_completed()
-    action2.wait_for_completed()
-    action1 = robot.set_head_angle(cozmo.robot.MIN_HEAD_ANGLE, in_parallel=True)
-    action2 = robot.set_lift_height(0.0, in_parallel=True)
-    action1.wait_for_completed()
-    action2.wait_for_completed()
+    robot.set_head_angle(cozmo.robot.MAX_HEAD_ANGLE, in_parallel=True)
+    robot.set_lift_height(1.0, in_parallel=True)
+    robot.wait_for_all_actions_completed()
+    robot.set_head_angle(cozmo.robot.MIN_HEAD_ANGLE, in_parallel=True)
+    robot.set_lift_height(0.0, in_parallel=True)
+    robot.wait_for_all_actions_completed()
+    robot.set_head_angle(cozmo.robot.MAX_HEAD_ANGLE, in_parallel=True)
+    robot.set_lift_height(1.0, in_parallel=True)
+    robot.wait_for_all_actions_completed()
+    robot.set_head_angle(cozmo.robot.MIN_HEAD_ANGLE, in_parallel=True)
+    robot.set_lift_height(0.0, in_parallel=True)
+    robot.wait_for_all_actions_completed()
 
 def to_the_left(robot):
     action1 = robot.set_head_angle(cozmo.robot.MIN_HEAD_ANGLE, in_parallel=True)
@@ -100,26 +98,32 @@ def forward_aggresive(robot):
     action1.wait_for_completed()
 
 def michael_turn(robot):
-    action2 = robot.set_lift_height(1.0, in_parallel=True)
-    action1 = robot.turn_in_place(angle=degrees(180), in_parallel=True)
-    action2.wait_for_completed()
-    # action1 = robot.turn_in_place(angle=degrees(90), in_parallel=True)
-    action2 = robot.set_lift_height(0.2, in_parallel=True)
-    # action1.wait_for_completed()
-    action2.wait_for_completed()
-    # action1 = robot.turn_in_place(angle=degrees(90), in_parallel=True)
-    action2 = robot.set_lift_height(1.0, in_parallel=True)
-    action1.wait_for_completed()
-    action2.wait_for_completed()
+    robot.set_lift_height(1.0, in_parallel=True)
+    robot.set_head_angle(cozmo.robot.MAX_HEAD_ANGLE, in_parallel=True)
+    robot.turn_in_place(angle=degrees(90), in_parallel=True)
+    robot.wait_for_all_actions_completed()
+    robot.turn_in_place(angle=degrees(-90), in_parallel=True)
+    robot.set_lift_height(0.1, in_parallel=True)
+    robot.set_head_angle(cozmo.robot.MIN_HEAD_ANGLE, in_parallel=True)
+    robot.wait_for_all_actions_completed()
+    robot.turn_in_place(angle=degrees(-90), in_parallel=True)
+    robot.set_lift_height(1.0, in_parallel=True)
+    robot.set_head_angle(cozmo.robot.MAX_HEAD_ANGLE, in_parallel=True)
+    robot.wait_for_all_actions_completed()
+    robot.turn_in_place(angle=degrees(90), in_parallel=True)
+    robot.set_lift_height(0.1, in_parallel=True)
+    robot.set_head_angle(cozmo.robot.MIN_HEAD_ANGLE, in_parallel=True)
+    robot.wait_for_all_actions_completed()
+    robot.turn_in_place(angle=degrees(90), in_parallel=True)
+    robot.set_lift_height(1.0, in_parallel=True)
+    robot.set_head_angle(cozmo.robot.MAX_HEAD_ANGLE, in_parallel=True)
+    robot.wait_for_all_actions_completed()
 
 def happy_turn(robot):
     robot.turn_in_place(angle=degrees(20)).wait_for_completed()
     robot.turn_in_place(angle=degrees(-40)).wait_for_completed()
     robot.turn_in_place(angle=degrees(40)).wait_for_completed()
     robot.turn_in_place(angle=degrees(-20)).wait_for_completed()
-
-def dance_for_me(robot):
-    robot.say_text('dance for me').wait_for_completed()
 
 def turn_right(robot):
     robot.turn_in_place(angle=degrees(720)).wait_for_completed()
@@ -177,29 +181,27 @@ def find_amp_at_current_time(nowTime, time, music):
 def cozmo_program(robot: cozmo.robot.Robot):
 
     robot.set_robot_volume(1.0)
-    robot.set_backpack_lights(cozmo.lights.blue_light, cozmo.lights.white_light, cozmo.lights.green_light, cozmo.lights.red_light, cozmo.lights.blue_light)
 
     music = read_music_data()
-
-
-    # robot.set_head_light(True)
-
-    # robot.move_lift(40)
-    # repeat_action(robot, up_n_down, 3)
-    sing(robot)
-    happy_turn(robot)
-    robot.say_text('start').wait_for_completed()
-    dance_moves = [7]
+    # robot.say_text('start').wait_for_completed()
+    robot.set_backpack_lights(cozmo.lights.blue_light, cozmo.lights.white_light, cozmo.lights.green_light,
+                              cozmo.lights.red_light, cozmo.lights.blue_light)
+    dance_moves = [1]
     dance_moves.insert(1, nod)
     dance_moves.insert(2, nod)
     dance_moves.insert(3, michael_dance)
-    dance_moves.insert(4, up_n_down)
-    dance_moves.insert(5, forward_aggresive)
-    dance_moves.insert(6, michael_turn)
+    dance_moves.insert(4, michael_turn)
+    dance_moves.insert(5, up_n_down)
+    dance_moves.insert(6, forward_aggresive)
     dance_moves.insert(7, turn_left)
     dance_moves.insert(8, turn_right)
+    dance_moves.insert(9, turn_left)
 
+    mixer.init()
+    mixer.music.load('../music/' + song_title + '.mp3')
     startTime = Time.time()
+    mixer.music.play()
     dance_to_music(robot, music, startTime, dance_moves)
+    robot.say_text('meow').wait_for_completed()
 
 cozmo.run_program(cozmo_program)
